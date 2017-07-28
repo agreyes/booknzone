@@ -1,0 +1,69 @@
+<div class="modal-header">
+    <button type="button" class="close" aria-label="Close" ng-click="$dismiss(mode())"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title" id="modal-title">{{modalTitle()}}</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <rd-loading ng-show="loading"></rd-loading>
+    <div class="panel panel-default" ng-if="data">
+        <!-- Default panel contents -->
+        <div class="panel-heading">{{data.class_name}}</div>
+        <!-- Table -->
+        <table class="table table-condensed">
+        <tr ng-if="mode() != 'details' || data.reg"><td>Student</td><td>{{profile.fullName()}}</td></tr>
+        <tr ng-if="mode() != 'details' || data.reg"><td>Email</td><td>{{profile.email}} <a href="/profile" ng-if="false && mode('register')" uib-tooltip="Click to change profile info"><i class="fa fa-pencil"></i><span class="hidden-xs"> change</span></a></td></tr>
+        <tr><td>Date</td><td>{{data.date | date:'EEEE, MMMM d, yyyy'}}</td></tr>
+        <tr><td>Time</td><td>{{data.start_time}} - {{data.end_time}}</td></tr>
+        <tr ng-if="mode() == 'details' && !data.reg"><td>Price</td><td>{{data.price | currency:"$"}}</td></tr>
+        <tr ng-if="!data.reg && mode() == 'details' && data.note"><td>Status</td><td>{{data.note}}</td></tr>
+        <tr ng-if="mode() == 'details' || data.reg"><td>Tags</td><td class="tag-list"><span ng-repeat="tag in getClassTags()" class="label label-primary tag pull-left" uib-tooltip="{{tag.description || tag.name}}"><i class="fa fa-{{tag.icon}}"></i>{{tag.name}}</span></td></tr>
+        <tr ng-if="data.reg"><td>Spots</td><td>{{data.reg.persons}}</td></tr>
+        <tr ng-if="!data.reg && mode() != 'details'""><td>Spots</td><td ng-if="mode() == 'register'"><select class="form-control" ng-model="reg.options.spots" ng-readonly="!data.spots || data.spots == 1">
+                <option ng-if="!data.spots" value="">No spots open</option>
+                <option ng-if="data.spots > 0" value="1" selected="selected">1 spot</option>
+                <option ng-if="data.spots >= 2" value="2">2 spots</option>
+                <option ng-if="data.spots >= 3" value="3">3 spots</option>
+            </select></td><td ng-if="mode() != 'register'">{{reg.options.spots}} Spot{{reg.options.spots > 1 ? 's' : ''}}</td></tr>
+        <tr ng-if="mode() != 'details' || data.reg""><td>Payment Method</td><td ng-if="mode() == 'register'""><select class="form-control" ng-model="reg.options.paymentMethod" ng-readonly="true" ng-disabled="true">
+            <option value="4" selected="selected">Class Card</option>
+        </select></td><td ng-if="mode() != 'register' || data.reg">Class Card</td></tr>
+        <tr ng-if="mode() == 'complete' || (data.reg && !data.reg.cancelled)"><td>Total Cost:</td><td>{{data.price * selectedSpots() * (1 + calcTax()) | currency:"$"}}</td></tr>
+        <tr ng-if="mode() == 'confirm'"><td colspan="2"><div class="checkbox"><label style="font-size:small">
+        <input type="checkbox" ng-model="reg.options.cancellationPolicy"> I have read, understand and agree to the
+        <a href="https://washingtondc.trapezeschool.com/classes/cancellation_policy.php" target="_blank">cancellation policy</a>. I understand that checking this box constitutes an agreement between myself and TSNY Washington DC that if I don't adhere to the guidelines described in the policy I will pay for the classes reserved whether I attend or not.</label></div>
+        </td></tr>
+        </table>
+        <div class="panel-footer" ng-if="mode() == 'confirm' || mode() == 'register'">
+            <div style="text-align: right;" ng-if="calcTax()">Sub Total: {{data.price * selectedSpots() | currency:"$"}}</div>
+            <div style="text-align: right;" ng-if="calcTax()">Tax: {{data.price * selectedSpots() * calcTax() | currency:"$"}}</div>
+            <div style="text-align: right;">Total Cost: {{data.price * selectedSpots() * (1 + calcTax()) | currency:"$"}}</div>
+        </div>
+        <div class="panel-footer" ng-if="mode() == 'complete'">
+            <span class="text-success">Your registration was successful! Please note the details above. You should be receiving a confirmation email momentarily. You can see all your reservations made through this application on the <a href="#/history" ng-click="$close(mode())">My Schedule</a> page.</span>
+        </div>
+        <div class="panel-footer" ng-if="mode() == 'error'"><span class="text-danger">{{error}}</span></div>
+        <div class="panel-footer" ng-if="mode() == 'cancel'">
+            <span class="text-danger" ng-if="violatesCancellationPolicy()">You are requesting to cancel this class with less than 72 hrs of notice. If the spots do not fill, you will still be responsible for the payment of this reservation.</span>
+            <label style="font-size:small" ng-if="violatesCancellationPolicy()">
+            <input type="checkbox" ng-model="reg.options.cancellationPolicy"> I have read, understand and agree to the
+            <a href="https://washingtondc.trapezeschool.com/classes/cancellation_policy.php" target="_blank">cancellation policy</a>. I understand that checking this box constitutes an agreement between myself and TSNY Washington DC that if I don't adhere to the guidelines described in the policy I will pay for the classes reserved whether I attend or not.</label>
+            <span class="text-warning">Are you sure you wish to request a cancellation for this reservation?</span>
+        </div>
+        <div class="panel-footer" ng-if="mode() == 'cancel_success'">
+            <span class="text-warning">An email has been sent to the office requesting this reservation be cancelled. {{cancel.options.cancellationPolicy ? "Please be aware that you are requesting to cancel this class with less than 72 hrs of notice. If the spots do not fill, you will still be responsible for the payment of this reservation." : ""}}</span>
+        </div>
+        <div class="panel-footer" ng-if="data.reg && data.reg.cancelled && mode() == 'details'">
+            <span class="text-warning">Cancellation Requested on {{data.reg.cancelled | date : 'M/d/yyyy'}}</span>
+        </div>
+    </div>
+</div>
+<div class="modal-footer" ng-if="data">
+    <a class="btn btn-default" href="/login" role="button" ng-if="!profile.student_id">Login</a>
+    <button class="btn btn-primary pull-right" ng-disabled="!data.spots" type="button" ng-if="mode() == 'details' && profile.student_id && !data.reg" ng-click="mode('register')" tooltip-enable="!data.spots" uib-tooltip="{{data.status}}" tooltip-placement="left">Register</button>
+    <button class="btn btn-success pull-right" type="button" ng-if="mode() =='register'" ng-click="mode('confirm')">Continue</button>
+    <button class="btn btn-success pull-right" ng-disabled="loading || !reg.options.cancellationPolicy" type="button" ng-if="mode() =='confirm'" ng-click="confirmRegistration()" uib-tooltip="{{!reg.options.cancellationPolicy ? 'Please read and accept privacy policy' : 'Click to confirm'}}">Complete</button>
+    <button class="btn btn-success pull-right" type="button" ng-click="$close(mode())" ng-if="mode() == 'complete'">Done</button>
+    <button class="btn btn-danger pull-left" ng-disabled="loading" type="button" ng-if="mode() =='register' || mode() == 'confirm' || mode()== 'cancel'" ng-click="mode('details')">Cancel</button>
+    <button class="btn btn-default pull-left" type="button" ng-click="$close(mode())" ng-if="mode() != 'register' && mode() != 'confirm' && mode() != 'cancel'">Close</button>
+    <button class="btn btn-{{violatesCancellationPolicy() ? 'warning' : 'primary'}} pull-right" type="button" ng-click="mode('cancel')" ng-if="data.reg && !data.reg.cancelled && mode() == 'details' && data.date >= todaysDate">Request Cancellation</button>
+    <button class="btn btn-warning pull-right" type="button" uib-tooltip="Please read and accept privacy policy" tooltip-enable="violatesCancellationPolicy() && !reg.options.cancellationPolicy" ng-disabled="loading || violatesCancellationPolicy() && !reg.options.cancellationPolicy" ng-click="onCancellationConfirmed()" ng-if="data.reg && !data.reg.cancelled && mode() == 'cancel'">Confirm</button>
+</div>

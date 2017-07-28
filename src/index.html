@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en" ng-app="FFApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Frequent Flyer</title>
+  <!-- STYLES -->
+  <!-- build:css lib/css/main.min.css -->
+  <link rel="stylesheet" type="text/css" href="/components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="/components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/components/rdash-ui/dist/css/rdash.min.css">
+  <link rel="stylesheet" type="text/css" href="/components/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.min.css">
+  <link rel="stylesheet" type="text/css" href="/components/angular-ui-grid/ui-grid.min.css">
+  <link rel="stylesheet" type="text/css" href="/css/frequentflyer.css">
+  <!-- endbuild -->
+  <!-- SCRIPTS -->
+  <!-- build:js lib/js/main.min.js -->
+  <script type="text/javascript" src="/components/angular/angular.min.js"></script>
+  <script type="text/javascript" src="/components/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="/components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script type="text/javascript" src="/components/moment/min/moment.min.js"></script>
+  <script type="text/javascript" src="/components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js"></script>
+  <script type="text/javascript" src="/components/angular-sticky/dist/angular-sticky.js"></script>
+  <script type="text/javascript" src="/components/angular-ui-grid/ui-grid.min.js"></script>
+  <script type="text/javascript" src="/components/angular-cookies/angular-cookies.min.js"></script>
+  <script type="text/javascript" src="/components/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <!-- endbuild -->
+  <!-- Custom Scripts -->
+  <script type="text/javascript" src="/js/dashboard.min.js"></script>
+</head>
+<!-- Header Bar -->
+<body ng-controller="MasterCtrl">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" ng-click="isNavOpen = !isNavOpen">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Frequent Flyer</a>
+    </div>
+    <div class="navbar-collapse collapse" uib-collapse="!isNavOpen" aria-expanded="false" aria-hidden="true" style="height: 0px;">
+      <ul class="nav navbar-nav">
+        <li><a href="#/classes" ng-click="isNavOpen = false">Class Schedule</a></li>
+        <li><a href="#/history" ng-click="isNavOpen = false" ng-if="loggedIn()">My Classes</a></li>
+        <li><a href="#/cards" ng-click="isNavOpen = false" ng-if="loggedIn()" ng-show>Class Cards</a></li>
+      </ul>
+      <form id="signin" class="navbar-form navbar-right" role="form" ng-show="false">
+      <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+          <input id="email" type="email" class="form-control" name="email" value="" placeholder="Email Address">                                        
+      </div>
+
+      <div class="input-group">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+          <input id="password" type="password" class="form-control" name="password" value="" placeholder="Password">                                        
+      </div>
+
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <ul class="nav navbar-nav navbar-right" ng-if="loggedIn()">
+        <li id="user-menu-dropdown" uib-dropdown>
+            <a href uib-dropdown-toggle><i class="glyphicon glyphicon-user"></i> {{username()}} <span class="caret"></span></a>
+            <ul class="dropdown-menu" uib-dropdown-menu aria-labeledby="user-menu-dropdown">
+                <li><a href="#/profile" ng-if>Profile</a></li>
+                <li><a href ng-click="logout()">Log Out</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right" ng-if="!loggedIn()">
+        <li><a href="/register">Register</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right" ng-if="!loggedIn()">
+        <li><a href="/login">Login</a></li>
+    </ul>
+    </div>
+    
+  </nav>
+  <!-- End Header Bar -->
+  <div class="page-content">
+    <div class="row alerts-container" data-ng-controller="AlertsCtrl" data-ng-show="alerts.length">
+      <div class="col-xs-12">
+        <uib-alert data-ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+      </div>
+    </div>
+    <!-- Main Content -->
+    <div ui-view></div>
+
+  </div><!-- End Page Content -->
+</body>
+</html>

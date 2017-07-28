@@ -1,0 +1,21 @@
+/**
+ * Widget Body Directive
+ */
+
+angular
+    .module('FFApp')
+    .directive('rdWidgetBody', rdWidgetBody);
+
+function rdWidgetBody() {
+    var directive = {
+        requires: '^rdWidget',
+        scope: {
+            loading: '=?',
+            classes: '@?'
+        },
+        transclude: true,
+        template: '<div class="widget-body" ng-class="classes"><rd-loading ng-show="loading"></rd-loading><div class="widget-content" ng-transclude></div></div>',
+        restrict: 'E'
+    };
+    return directive;
+};

@@ -1,0 +1,250 @@
+<div class="row" ng-controller="ProfileCtrl">
+	<div class="col-lg-12" >
+		<rd-widget>
+			<rd-widget-header>
+				<div class="row">
+					<div style="font-size:large" class="col-lg-12">Student Profile</div>
+				</div>
+			</rd-widget-header>
+			<rd-widget-body classes="no-padding" loading="loading">
+				<form ng-model="user_data.profile-form" class="profile-form">
+					<uib-tabset active="activeForm">
+						<uib-tab index="0" heading="Details">
+							<ng-form ng-model="user_data.profile-form-details" class="row">
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="first_name">First Name</label>
+									<input readonly disabled class="form-control" id="first_name" required ng-model="user_data.first_name" type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="last_name">Last Name</label>
+									<input readonly disabled class="form-control" id="last_name" required ng-model="user_data.last_name" type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label " for="nickname">Nickname</label>
+									<input readonly disabled class="form-control" id="nickname" ng-model="user_data.nickname" type="text"/>
+								</div>
+								<div class="form-group col-sm-6" id="div_gender">
+									<label class="control-label required-field" for="gender">Gender</label>
+									<div class="">
+										<label class="radio-inline"><input readonly disabled ng-model="user_data.gender" type="radio" value="Male" required/>Male</label>
+										<label class="radio-inline"><input readonly disabled ng-model="user_data.gender" type="radio" value="Female"/>Female</label>
+									</div>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="email">Email</label>
+									<input readonly disabled class="form-control" id="email" required ng-model="user_data.email" type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="email2">Email (confirm)</label>
+									<input readonly disabled class="form-control" id="email2" required ng-model="user_data.email2" type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="dob">Date of Birth</label>
+									<input readonly disabled class="form-control" id="dob" ng-model="user_data.dob" placeholder="MM/DD/YYYY" required type="date"/>
+								</div>
+								<div class="form-group col-sm-6">
+									<label class="control-label " for="guardian">Guardian</label>
+									<input readonly disabled class="form-control" id="guardian" ng-model="user_data.guardian" type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label " for="organization">Organization</label>
+									<input readonly disabled class="form-control" id="organization" ng-model="user_data.organization" type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label " for="hear_about">How did you hear about us?</label>
+									<select disabled class="select form-control" id="hear_about" ng-model="user_data.hear_about">
+										<option value="No Answer"></option>
+										<option value="Friend">Friend</option>
+										<option value="Advertisement">Advertisement</option>
+										<option value="TV Show">TV Show</option>
+										<option value="Magazine Article">Magazine Article</option>
+										<option value="Internet">Internet</option>
+										<option value="Flyer">Flyer</option>
+										<option value="Mailing">Mailing</option>
+										<option value="Other">Other</option>
+									</select>
+								</div>
+							</ng-form>
+						</uib-tab>
+						<uib-tab index="1" heading="Contact">
+							<ng-form ng-model="user_data.profile-form-contact" class="row">
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="address1">Mailing Address</label>
+									<input readonly disabled class="form-control" id="address1" ng-model="user_data.address1" required type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label " for="address2">
+									Mailing Address Line 2
+									</label>
+									<input readonly disabled class="form-control" id="address2" ng-model="user_data.address2" type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="city">City</label>
+									<input readonly disabled class="form-control" id="city" ng-model="user_data.city" required type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="state">State/Province/Territory</label>
+									<select disabled class="select form-control" id="state" required ng-model="user_data.state">
+										<option value="">State</option>
+										<optgroup label="US States">
+											<option value="Alaska">Alaska</option>
+											<option value="Alabama">Alabama</option>
+											<option value="Arkansas">Arkansas</option>
+											<option value="Arizona">Arizona</option>
+											<option value="California">California</option>
+											<option value="Colorado">Colorado</option>
+											<option value="Connecticut">Connecticut</option>
+											<option value="District of Columbia">District of Columbia</option>
+											<option value="Delaware">Delaware</option>
+											<option value="Florida">Florida</option>
+											<option value="Georgia">Georgia</option>
+											<option value="Hawaii">Hawaii</option>
+											<option value="Iowa">Iowa</option>
+											<option value="Idaho">Idaho</option>
+											<option value="Illinois">Illinois</option>
+											<option value="Indiana">Indiana</option>
+											<option value="Kansas">Kansas</option>
+											<option value="Kentucky">Kentucky</option>
+											<option value="Louisiana">Louisiana</option>
+											<option value="Massachusetts">Massachusetts</option>
+											<option value="Maryland">Maryland</option>
+											<option value="Maine">Maine</option>
+											<option value="Michigan">Michigan</option>
+											<option value="Minnesota">Minnesota</option>
+											<option value="Missouri">Missouri</option>
+											<option value="Mississippi">Mississippi</option>
+											<option value="Montana">Montana</option>
+											<option value="North Carolina">North Carolina</option>
+											<option value="North Dakota">North Dakota</option>
+											<option value="Nebraska">Nebraska</option>
+											<option value="New Hampshire">New Hampshire</option>
+											<option value="New Jersey">New Jersey</option>
+											<option value="New Mexico">New Mexico</option>
+											<option value="Nevada">Nevada</option>
+											<option value="New York">New York</option>
+											<option value="Ohio">Ohio</option>
+											<option value="Oklahoma">Oklahoma</option>
+											<option value="Oregon">Oregon</option>
+											<option value="Pennsylvania">Pennsylvania</option>
+											<option value="Rhode Island">Rhode Island</option>
+											<option value="South Carolina">South Carolina</option>
+											<option value="South Dakota">South Dakota</option>
+											<option value="Tennessee">Tennessee</option>
+											<option value="Texas">Texas</option>
+											<option value="Utah">Utah</option>
+											<option value="Virginia">Virginia</option>
+											<option value="Vermont">Vermont</option>
+											<option value="Washington">Washington</option>
+											<option value="Wisconsin">Wisconsin</option>
+											<option value="West Virginia">West Virginia</option>
+											<option value="Wyoming">Wyoming</option>
+										</optgroup>
+										<optgroup label="US Military States">
+											<option value="Armed Forces Americas">Armed Forces Americas</option>
+											<option value="Armed Forces Africa">Armed Forces Africa</option>
+											<option value="Armed Forces Europe">Armed Forces Europe</option>
+											<option value="Armed Forces Canada">Armed Forces Canada</option>
+											<option value="Armed Forces Middle East">Armed Forces Middle East</option>
+											<option value="Armed Forces Pacific">Armed Forces Pacific</option>
+										</optgroup>
+										<optgroup label="US Possessions or Territories">
+											<option value="American Samoa">American Samoa</option>
+											<option value="Federated States of Micronesia">Federated States of Micronesia</option>
+											<option value="Guam">Guam</option>
+											<option value="Northern Mariana Islands">Northern Mariana Islands</option>
+											<option value="Marshall Islands">Marshall Islands</option>
+											<option value="Puerto Rico">Puerto Rico</option>
+											<option value="Palau">Palau</option>
+											<option value="Virgin Islands">Virgin Islands</option>
+										</optgroup>
+										<optgroup label="Provinces of Canada">
+											<option value="Alberta">Alberta</option>
+											<option value="British Columbia">British Columbia</option>
+											<option value="Manitoba">Manitoba</option>
+											<option value="New Brunswick">New Brunswick</option>
+											<option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+											<option value="Northwest Territories">Northwest Territories</option>
+											<option value="Nova Scotia">Nova Scotia</option>
+											<option value="Nunavut">Nunavut</option>
+											<option value="Ontario">Ontario</option>
+											<option value="Prince Edward Island">Prince Edward Island</option>
+											<option value="Quebec">Quebec</option>
+											<option value="Saskatchewan">Saskatchewan</option>
+											<option value="Yukon">Yukon</option>
+										</optgroup>
+									</select>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="country">Country</label>
+									<input readonly disabled class="form-control" id="country" ng-model="user_data.country" type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="zip_code">ZIP/Postal Code</label>
+									<input readonly disabled class="form-control" id="zip_code" ng-model="user_data.zip_code" required type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label " for="phone_home">Home Phone</label>
+									<input readonly disabled class="form-control" id="phone_home" ng-model="user_data.phone_home" type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label " for="phone_mobile">Mobile Phone</label>
+									<input readonly disabled class="form-control" id="phone_mobile" ng-model="user_data.phone_mobile" type="text"/>
+								</div>
+								<div class="form-group col-sm-6 ">
+									<label class="control-label " for="phone_work">Work Phone</label>
+									<input readonly disabled class="form-control" id="phone_work" ng-model="user_data.phone_work" type="text"/>
+								</div>
+							</ng-form>
+						</uib-tab>
+						<uib-tab index="2" heading="Medical">
+							<ng-form ng-model="user_data.profile-form-medical" class="row">
+								<div class="form-group col-sm-6 ">
+									<label class="control-label required-field" for="emergency_contact">Emergency Contact Name</label>
+									<input readonly disabled class="form-control" id="emergency_contact" ng-model="user_data.emergency_contact" required type="text"/>
+								</div>
+								<div class="form-group col-sm-6">
+									<label class="control-label required-field" for="emergency_phone">Emergency Contact Phone</label>
+									<input readonly disabled class="form-control" id="emergency_phone" ng-model="user_data.emergency_phone" required type="text"/>
+								</div>
+								<div class="form-group col-xs-12 nomargin" id="div_health_issues_btn">
+									<label class="control-label required-field" for="health_issues_btn">Do you have any physical health problems or medical problems?</label>
+									<div class="">
+										<label class="radio-inline"><input readonly disabled ng-model="user_data.health_issues_btn" type="radio" required value="1"/>Yes</label>
+										<label class="radio-inline"><input readonly disabled ng-model="user_data.health_issues_btn" type="radio" value="0"/>No</label>
+									</div>
+								</div>
+								<div class="form-group col-xs-12" ng-if="user_data.health_issues_btn == '1'">
+									<label class="control-label required-field" for="health_issues">Please give details below.</label>
+									<textarea readonly class="form-control" id="health_issues" style="resize: none;" required ng-model="user_data.health_issues" rows="3"></textarea>
+								</div>
+								<div class="form-group col-xs-12 nomargin" id="div_special_needs_btn">
+									<label class="control-label required-field" for="special_needs_btn">Do you have any special needs?</label>
+									<div class="">
+										<label class="radio-inline"><input readonly disabled ng-model="user_data.special_needs_btn" required type="radio" value="1"/>Yes</label>
+										<label class="radio-inline"><input readonly disabled ng-model="user_data.special_needs_btn" type="radio" value="0"/>No</label>
+									</div>
+								</div>
+								<div class="form-group col-xs-12" ng-if="user_data.special_needs_btn == '1'">
+									<label class="control-label required-field" for="special_needs">Please give details below</label>
+									<textarea readonly class="form-control" id="special_needs" style="resize: none;" required ng-model="user_data.special_needs" rows="3"></textarea>
+								</div>
+								<div class="form-group col-sm-6">
+									<label class="control-label " for="doctor_name">Doctor's Name</label>
+									<input readonly disabled class="form-control" id="doctor_name" ng-model="user_data.doctor_name" type="text"/>
+								</div>
+								<div class="form-group col-sm-6">
+									<label class="control-label " for="doctor_phone">Doctor's Phone</label>
+									<input readonly disabled class="form-control" id="doctor_phone" ng-model="user_data.doctor_phone" type="text"/>
+								</div>
+								<div class="form-group col-sm-6">
+									<label class="control-label " for="insurance">Insurance</label>
+									<input readonly disabled class="form-control" id="insurance" ng-model="user_data.insurance" type="text"/>
+								</div>
+							</ng-form>
+						</uib-tab>
+					</uib-tabset>
+				</form>
+			</rd-widget-body>
+		</rd-widget>
+	</div>
+</div>
