@@ -1,4 +1,4 @@
-angular.module('FFApp')
+angular.module('app')
     .service('AlertsService', [AlertsService]);
 
     function AlertsService(){

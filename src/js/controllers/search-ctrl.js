@@ -3,7 +3,7 @@
  */
 
 angular
-.module('FFApp')
+.module('app')
     .controller('SearchCtrl', ['$scope', '$timeout', '$q', '$cookieStore', 'ClassesService', SearchCtrl]);
 
 function SearchCtrl($scope, $timeout, $q, $cookieStore, ClassesService, calendarConfig) {

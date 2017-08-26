@@ -1,20 +1,18 @@
 var express = require('express');
 var moment = require('moment');
 var tsny = require('../models/tsny');
+var events = require('../models/events');
+var settings = require('../client/settings');
 
 var router = express.Router();
 
 
-/*  "/classes"
- *    GET: gets todays classes
- *    POST: gets classes on the desired date
+/*  "/events"
+ *    GET: gets events on the desired date
  */
-
 router.get("/get/:desired_date?", function(req,res) {
 	tsny.getClasses(req.params["desired_date"], function(data){
 		res.json(data);
-		//res.write(JSON.stringify(data));
-		//res.end();
 	});
 });
 
@@ -36,9 +34,9 @@ router.post("/query", function(req,res) {
     	console.log(query);
     	var queryObject = parseQuery(query);
     	var range = validateDateRange(queryObject.start_date, queryObject.end_date);
-    	queryObject.start_date = 
+    	queryObject.start_date = range[0];
+    	queryObject.end_date = range[1];
     	var length = range[2];
-    	if(length ?)
 
     	console.log(queryObject);
 

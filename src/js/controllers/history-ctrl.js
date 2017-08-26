@@ -3,7 +3,7 @@
  */
 
 angular
-.module('FFApp')
+.module('app')
     .controller('HistoryCtrl', ['$scope', '$timeout', '$q', 'ClassesService', 'UserService', 'calendarConfig', HistoryCtrl]);
 
 function HistoryCtrl($scope, $timeout, $q, ClassesService, UserService, calendarConfig) {

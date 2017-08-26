@@ -2,7 +2,7 @@
  * Profile Controller
  */
 angular
-    .module('FFApp')
+    .module('app')
     .controller('ProfileCtrl', ['$scope', "UserService", ProfileCtrl]);
 
 function ProfileCtrl($scope, UserService) {

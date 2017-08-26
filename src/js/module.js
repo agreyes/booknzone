@@ -1,5 +1,5 @@
 /*angular.module('RDash', ['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.grid']);*/
-angular.module('FFApp', ['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.grid', 'mwl.calendar', 'hl.sticky'])
+angular.module('app', ['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.grid', 'mwl.calendar', 'hl.sticky'])
 .config(['calendarConfig', function(calendarConfig) {
 
     //calendarConfig.templates.calendarMonthView = 'path/to/custom/template.html'; //change the month view template globally to a custom template

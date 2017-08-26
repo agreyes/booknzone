@@ -3,7 +3,7 @@
  */
 
 angular
-    .module('FFApp')
+    .module('app')
     .controller('AlertsCtrl', ['$scope', "AlertsService", AlertsCtrl]);
 
 function AlertsCtrl($scope, AlertsService) {
