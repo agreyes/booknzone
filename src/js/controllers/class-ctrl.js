@@ -3,7 +3,7 @@
  */
 
 angular
-    .module('FFApp')
+    .module('app')
     .controller('ClassCtrl', ['$scope', "ClassesService", "UserService", "$uibModalInstance", "class_data", ClassCtrl]);
 
 function ClassCtrl($scope, ClassesService, UserService, $uibModalInstance, class_data) {

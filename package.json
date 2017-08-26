@@ -16,7 +16,6 @@
     "bower": "^1.6.9",
     "cheerio": "^0.22.0",
     "express": "^4.13.3",
-    "express-stormpath": "^3.1.8",
     "group-by": "0.0.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",

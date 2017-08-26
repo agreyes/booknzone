@@ -1,9 +1,9 @@
-angular.module('FFApp')
+angular.module('app')
     .service('ClassesService', ['$http', 'moment', '$uibModal', ClassesService]);
 
     function ClassesService($http, moment, $uibModal){
         this.getClasses = function(desired_date, refresh){
-            return $http.get("/classes/get/" + (desired_date || ""), {cache: !refresh}).
+            return $http.get("/events/get/" + (desired_date || ""), {cache: !refresh}).
                 then(function(response) {
                     return response.data;
                 }, function(response) {
@@ -12,7 +12,7 @@ angular.module('FFApp')
         };
 
         this.getSchedule = function(desired_date, refresh){
-            return $http.get("/classes/schedule/" + (desired_date || ""), {cache: !refresh}).
+            return $http.get("/events/schedule/" + (desired_date || ""), {cache: !refresh}).
                 then(function(response) {
                     return response.data;
                 }, function(response) {

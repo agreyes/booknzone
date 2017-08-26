@@ -60,29 +60,26 @@ exports.getClasses = function(desired_date, callback){
 		      		switch(i){
 		      			case 0: // class_id
 		      				var input = el.find('input');
-		      				row["class_id"] = input.val() || "";
+		      				row["id"] = input.val() || "";
 		      			break;
 		      			case 1: // class_name
-		      				row["class_name"] = el.text().replace(/[\s]+/g, " ");
-		      				var instructor = row["class_name"].match(/with[\s]([\w]+)/i);
-		      				row["instructor"] = (instructor && instructor.length) ? instructor[0].split(" ")[1] : "";
+		      				row["name"] = el.text().replace(/[\s]+/g, " ");
+		      				//var instructor = row["class_name"].match(/with[\s]([\w]+)/i);
+		      				//row["instructor"] = (instructor && instructor.length) ? instructor[0].split(" ")[1] : "";
 		      				break;
 		      			case 2: // time
 		      				var time = el.text().replace(/\s/g, "").split("-");
 		      				row["start_time"] = time[0];
 		      				row["end_time"] = time[1];
-		      				row["date"] = desired_date;
+		      				row["start_date"] = desired_date;
+		      				row["end_date"] = desired_date;
 		      				break;
 		      			case 3: // price
-		      				row["price"] = el.text().trim();
+		      				row["cost"] = el.text().trim();
 		      				break;
 		      			case 4:
-		      				row["spots"] = parseInt(el.text());
-		      				if(row["spots"]) {
-		      					row["note"] = row["spots"] + " Spots Open";
-		      				}else{
-		      					row["note"] = el.text().trim();
-		      				}
+		      				row["availability"] = parseInt(el.text());
+		      				row["description"] = "";
 		      				row["status"] = (row["note"].match(/private/i) || row["note"].match(/cancelled/i) || row["note"].match(/full/i) || row["note"].match(/open/i) || [""])[0].toLowerCase()
 		      				break;
 		      		}
@@ -91,83 +88,12 @@ exports.getClasses = function(desired_date, callback){
 		      });
 		      
 	  		}
+
 	  		callback(dataRows);
 	  		
 	    })
 	  });
   	httpreq.write(postData);
-  	httpreq.end();
-}
-
-exports.getSchedule = function(desired_date, callback){
-	// TODO: Check it's in the future
-	if(!moment(desired_date).isValid()){
-		callback([]);
-		return;
-	}
-	
-	var md = moment(desired_date);
-	desired_date = md.subtract((6 + md.days())%7, "days").format("YYYY-MM-DD");
-	console.log("Get schedule: ", desired_date);
-  	var options = {
-	    host: 'washingtondc.trapezeschool.com',
-	    port: 443,
-	    path: '/classes/schedule.php?t=all&wkStartDate=' + desired_date,
-	    method: 'GET'
-	  };
-	
-	var data = "";
-  	var httpreq = https.request(options, function (response) {
-	    response.setEncoding('utf8');
-	    response.on('data', function (chunk) {
-	    	data += chunk;
-	    });
-	    response.on('end', function() {
-	      var dataRows = [];
-	      var dataStart = data.indexOf(SCHEDULE_HTML_START) + SCHEDULE_HTML_START.length + 1;
-
-	      if(dataStart > 1000){
-		      var d = cheerio.load(data.substring(dataStart, data.indexOf(SCHEDULE_HTML_END, dataStart) - 1))
-		      var days = d('td[class="classinfo"]');
-		      var trs = d('div[class="listing"]');
-
-		      var day_i = 0;
-		      days.each(function(){
-		      	var listings = d(this).find('div[class="listing"]');
-		      	var date = moment(desired_date).add(day_i++,"days").format("YYYY-MM-DD");
-		      	
-		      	listings.each(function(){
-		      		var row = {};
-		      		var el = d(this);
-		      		el.find('br').replaceWith(' ');
-			      	var text = el.text().replace(/[\s]+/g, " ");
-			      	var time = (text.match(/1?\d:\d\d\s?[ap]m - 1?\d:\d\d\s?[ap]m/i) || [])[0];
-			      	if(!time) return;
-			      	var price = text.match(/\$\d+\.\d\d/i)[0];
-			      	var name = text.substring(0, text.indexOf(time));
-			      	row["class_id"] = "";
-			      	row["class_name"] = name;
-			      	
-	  				var instructor = row["class_name"].match(/with[\s]([\w]+)/i);
-	  				row["instructor"] = (instructor && instructor.length) ? instructor[0].split(" ")[1] : "";
-		      		time = time.replace(/\s/g, "").split("-");
-      				row["start_time"] = time[0];
-      				row["end_time"] = time[1];
-      				row["date"] = date;
-		      		row["price"] = price.replace("$","");
-		      		row["spots"] = null;
-		      		row["status"] = null;
-		      		row["note"] = "";
-		      		dataRows.push(row);
-		      	})
-		      });
-		      
-	  		}
-	  		callback(dataRows);
-	  		
-	    })
-	  });
-  	//httpreq.write(postData);
   	httpreq.end();
 }
 

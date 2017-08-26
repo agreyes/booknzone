@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * Route configuration for the RDash module.
+ * Route configuration for the module.
  */
-angular.module('FFApp').config(['$stateProvider', '$urlRouterProvider',
+angular.module('app').config(['$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
 
         // For unmatched routes
@@ -15,10 +15,6 @@ angular.module('FFApp').config(['$stateProvider', '$urlRouterProvider',
                 url: '/',
                 templateUrl: 'templates/schedule.html'
             })
-            .state('cards', {
-                url: '/cards',
-                templateUrl: 'templates/cards.html'
-            })
             .state('history', {
                 url: '/history',
                 templateUrl: 'templates/history.html'
@@ -27,8 +23,8 @@ angular.module('FFApp').config(['$stateProvider', '$urlRouterProvider',
                 url: '/profile',
                 templateUrl: 'templates/profile.html'
             })
-            .state('classes', {
-                url: '/classes',
+            .state('schedule', {
+                url: '/schedule',
                 templateUrl: 'templates/schedule.html'
             });
     }

@@ -3,7 +3,7 @@
  */
 
 angular
-.module('FFApp')
+.module('app')
     .controller('CalendarController', ['$scope', '$timeout', '$q', 'ClassesService', 'calendarConfig', CalendarController]);
 
 function CalendarController($scope, $timeout, $q, ClassesService, calendarConfig) {

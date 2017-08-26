@@ -7,10 +7,10 @@ var querystring = require("querystring");
 var https = require("https");
 var router = express.Router()
 var cheerio = require("cheerio");
-var stormpath = require('express-stormpath');
 var moment = require('moment');
 var nodemailer = require('nodemailer');
 var extend = require('extend');
+var settings = require('./client/settings');
 //var ObjectID = mongodb.ObjectID;
 
 var CONTACTS_COLLECTION = "contacts";
@@ -24,99 +24,32 @@ app.use(express.static(__dirname + "/public"));
 //app.use('/components',  express.static(__dirname + '/bower_components'));
 //app.use('/js',  express.static(__dirname + '/bower_components'));
 
+app.use(function(req, res, next){
+  if(!settings || !settings.preProcessRequest) {
+      next();
+  }else{
+    for(key in settings.preProcessRequest){
+      if(settings.preProcessRequest.hasOwnProperty(key)){
+        settings.preProcessRequest[key](req,res,next);
+        return;
+      }
+    }
+    next();
+  }
+});
+
 app.use(require('./controllers'));
 
-app.use(stormpath.init(app, { website: true
-  ,preRegistrationHandler: function (formData, req, res, next) {
-    if(!moment(formData.username).isBefore(moment().subtract(6, "years"))){
-      return next(new Error('Please verify your birth date.'));
-    }
-    tsny.getUserInfo(formData["email"], formData["username"], function(data){
-      if(!data.student_id){
-        return next(new Error('Please verify your email address and date of birth.'));
-      }else{
-        formData["username"] = data.student_id + " " + formData.username;
-        formData["givenName"] = data.first_name;
-        formData["surname"] = data.last_name;
-        next();
-      }
-    });
-    
-    // TODO: Check for account with TSNY
-    //next(new Error('You\'re not allowed to register with \'@some-domain.com\'.'));
+app.use(bodyParser.json());
 
-    
-  }
-  //,expandCustomData: true
-  //,expand: {
-	//	customData: true
-	//}
-	,web:{
-    me: { 
-      enabled: false,
-      expand: {
-        customData: true
-      } 
-    },
-    login: {
-      enabled: true,
-      nextUri: "/"
-    },
-    logout: { enabled: true },
-		register: {
-        nextUri: '/',
-	    	form: {
-            fieldOrder: ['email', 'username', 'password'],
-	      		fields: {
-	        		username: {
-	          			enabled: true,
-	          			label: 'DOB',
-	          			placeholder: 'mm/dd/yyyy',
-	          			required: true,
-	          			type: 'date'
-	        		},
-              //student_id: {
-              //  enabled: false,
-              //  label: '',
-              //  placeholder: '',
-              //  required: false,
-              //  type: 'hidden'
-              //},
-              givenName: {
-                enabled: false
-              },
-              surname: {
-                enabled: false
-              }
-	      		}
-	    	}
-		}
-	}
-}));
+// Connect to the database before starting the application server.
+dbClient._connect(function (err) {
+  console.log("Database connection ready");
 
-app.on('stormpath.ready', function () {
-  // Initialize the app.
-  console.log("Stormpath ready.");
   var server = app.listen(process.env.PORT || 8080, function () {
     var port = server.address().port;
     console.log("App now running on port", port);
   });
-});
-app.use(bodyParser.json());
-
-// Create a database variable outside of the database connection callback to reuse the connection pool in your app.
-var db;
-
-// Connect to the database before starting the application server.
-dbClient.connect(function (err) {
-  if (err) {
-    console.log(err);
-    process.exit(1);
-  }
-
-  // Save database object from the callback for reuse.
-  db = dbClient.getDb();
-  console.log("Database connection ready");
 });
 
 // CONTACTS API ROUTES BELOW
@@ -130,12 +63,13 @@ function handleError(res, reason, message, code) {
 /*  "/user/profile"
  *    GET: Get user profile
  */
-app.get('/user/profile', stormpath.loginRequired, function (req, res) {
+app.get('/user/profile', function (req, res) {
   /*
     If we get here, the user is logged in.  Otherwise, they
-    were redirected to the login page
+    were redirected to the login page - lies
    */
-    tsny.getUserInfo(req.user.email, (req.user.username || "").split(' ')[1], function(data){
+   var user = req.user || {};
+    tsny.getUserInfo(user.email, (user.username || "").split(' ')[1], function(data){
       res.json(data);
     });
 });
@@ -143,7 +77,7 @@ app.get('/user/profile', stormpath.loginRequired, function (req, res) {
 /*  "/user/history/:length?/:page?"
  *    GET: Get user registration history
  */
-app.get('/user/history/:length?/:page?', stormpath.loginRequired, function(req,res){
+app.get('/user/history/:length?/:page?', function(req,res){
   req.user.getCustomData(function(err, data){
     if(err || !data) {
       console.log(err);
@@ -159,7 +93,7 @@ app.get('/user/history/:length?/:page?', stormpath.loginRequired, function(req,r
 /*  "/user/history/cancel/:id"
  *    PUT: Request cancellation
  */
-app.put("/user/history/cancel/:id", stormpath.loginRequired, function(req, res) {
+app.put("/user/history/cancel/:id", function(req, res) {
   
   req.user.getCustomData(function(err, customData){
     if(err || !customData) {
@@ -247,7 +181,7 @@ app.put("/user/history/cancel/:id", stormpath.loginRequired, function(req, res) 
 /*  "/class"
  *    POST: Register for class
  */
-app.post('/class/:desired_date/:class_id/:persons/:payment_type?', stormpath.loginRequired, function (req, res) {
+app.post('/class/:desired_date/:class_id/:persons/:payment_type?', function (req, res) {
   //If we get here, the user is logged in.  Otherwise, they
   //were redirected to the login page
   req.user.getCustomData(function(err, customData){
@@ -309,68 +243,3 @@ app.post('/class/:desired_date/:class_id/:persons/:payment_type?', stormpath.log
     }
   });
 });
-
-/*  "/contacts"
- *    GET: finds all contacts
- *    POST: creates a new contact
- */
-
-/*app.get("/contacts", function(req, res) {
-  db.collection(CONTACTS_COLLECTION).find({}).toArray(function(err, docs) {
-    if (err) {
-      handleError(res, err.message, "Failed to get contacts.");
-    } else {
-      res.status(200).json(docs);
-    }
-  });
-});
-
-app.post("/contacts", function(req, res) {
-  var newContact = req.body;
-  newContact.createDate = new Date();
-
-  if (!(req.body.firstName || req.body.lastName)) {
-    handleError(res, "Invalid user input", "Must provide a first or last name.", 400);
-  }
-
-  db.collection(CONTACTS_COLLECTION).insertOne(newContact, function(err, doc) {
-    if (err) {
-      handleError(res, err.message, "Failed to create new contact.");
-    } else {
-      res.status(201).json(doc.ops[0]);
-    }
-  });
-});
-
-app.get("/contacts/:id", function(req, res) {
-  db.collection(CONTACTS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
-    if (err) {
-      handleError(res, err.message, "Failed to get contact");
-    } else {
-      res.status(200).json(doc);
-    }
-  });
-});
-
-app.put("/contacts/:id", function(req, res) {
-  var updateDoc = req.body;
-  delete updateDoc._id;
-
-  db.collection(CONTACTS_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, updateDoc, function(err, doc) {
-    if (err) {
-      handleError(res, err.message, "Failed to update contact");
-    } else {
-      res.status(204).end();
-    }
-  });
-});
-
-app.delete("/contacts/:id", function(req, res) {
-  db.collection(CONTACTS_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, result) {
-    if (err) {
-      handleError(res, err.message, "Failed to delete contact");
-    } else {
-      res.status(204).end();
-    }
-  });
-});*/

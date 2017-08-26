@@ -1,4 +1,4 @@
-angular.module('FFApp')
+angular.module('app')
     .service('UserService', ['$http', '$window', UserService]);
 
     function UserService($http, $window){

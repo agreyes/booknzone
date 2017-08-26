@@ -3,7 +3,7 @@
  */
 
 angular
-    .module('FFApp')
+    .module('app')
     .directive('rdWidget', rdWidget);
 
 function rdWidget() {

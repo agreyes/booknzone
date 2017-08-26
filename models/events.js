@@ -1,15 +1,39 @@
-var dbClient = require("../db");
-var groupBy = require("group-by");
-var ObjectID = dbClient.ObjectID;
+var db = require("../db");
 
-var CONTACTS_COLLECTION = "contacts";
-var CLASSES_COLLECTION = "classes";
+exports.get = function(filter, callback){
+  db.events().find(filter).toArray(callback);
+}
+
+exports.update = function(callback){
+
+}
+
+exports.new_event = function(){
+  this.id = 0;
+  this.name = "new_event";
+  this.description = "";
+  this.start_time = moment();
+  this.end_time = moment();
+  this.date = moment();
+  this.price = 0;
+  this.capacity = 1;
+  this.availability = 1;
+  this.status = "open";
+  this.cost = 0;
+  this.tax = 0;
+  this.type = "default";
+}
 
 /*  "/contacts"
  *    GET: finds all contacts
  *    POST: creates a new contact
  */
 
+
+exports.getClassTypes = function(){
+  return CLASS_TYPES;
+}
+/*
 exports.get = function(req, res) {
   dbClient.getDb().collection(CONTACTS_COLLECTION).find({}).toArray(function(err, docs) {
     if (err) {
@@ -18,7 +42,7 @@ exports.get = function(req, res) {
       res.status(200).json(docs);
     }
   });
-};
+};*/
 
 // exports.batchUpdate = function(tsnyStores){
 // 	var allClasses = dbClient.getDb().collection(CONTACTS_COLLECTION);
@@ -40,7 +64,7 @@ exports.get = function(req, res) {
 
 //   	});
 // }
-
+/*
 app.post("/contacts", function(req, res) {
   var newContact = req.body;
   newContact.createDate = new Date();
@@ -57,12 +81,6 @@ app.post("/contacts", function(req, res) {
     }
   });
 });
-
-/*  "/contacts/:id"
- *    GET: find contact by id
- *    PUT: update contact by id
- *    DELETE: deletes contact by id
- */
 
 app.get("/contacts/:id", function(req, res) {
   db.collection(CONTACTS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
@@ -95,4 +113,4 @@ app.delete("/contacts/:id", function(req, res) {
       res.status(204).end();
     }
   });
-});
+});*/

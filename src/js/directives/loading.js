@@ -4,7 +4,7 @@
  */
 
 angular
-    .module('FFApp')
+    .module('app')
     .directive('rdLoading', rdLoading);
 
 function rdLoading() {

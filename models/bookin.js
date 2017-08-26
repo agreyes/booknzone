@@ -1,7 +1,7 @@
 var moment = require('moment');
 
 var event_status = ["open", "closed", "cancelled"];
-var event_types [];
+var event_types ["default"];
 
 var event = function(id){
 	this.id = id || 0;
@@ -18,11 +18,6 @@ var event = function(id){
 	this.tax = 0;
 	this.type = "default";
 }
-
-
-
-
-    
 
     interface events {
         function query(start_date, end_date);

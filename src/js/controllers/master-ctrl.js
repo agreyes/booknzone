@@ -2,7 +2,7 @@
  * Master Controller
  */
 
-angular.module('FFApp')
+angular.module('app')
     .controller('MasterCtrl', ['$scope', '$cookieStore', 'UserService', 'AlertsService', MasterCtrl]);
 
 function MasterCtrl($scope, $cookieStore, UserService, AlertsService) {
